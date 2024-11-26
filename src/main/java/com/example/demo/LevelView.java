@@ -31,8 +31,11 @@ public class LevelView {
 		winImage.showWinImage();
 	}
 	
-	public void showGameOverImage() {
+	public void showGameOverImage(double scaleX, double scaleY) {
 		root.getChildren().add(gameOverImage);
+		gameOverImage.setScaleX(scaleX);
+		gameOverImage.setScaleY(scaleY);
+
 	}
 	
 	public void removeHearts(int heartsRemaining) {

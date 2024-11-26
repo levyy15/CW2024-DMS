@@ -76,6 +76,8 @@ public abstract class LevelParent extends Observable {
 	public void goToNextLevel(String levelName) {
 		setChanged();
 		notifyObservers(levelName);
+
+		timeline.stop();
 	}
 
 	private void updateScene() {
@@ -212,7 +214,7 @@ public abstract class LevelParent extends Observable {
 
 	protected void loseGame() {
 		timeline.stop();
-		levelView.showGameOverImage();
+		levelView.showGameOverImage(0.4,0.5);
 	}
 
 	protected UserPlane getUser() {
