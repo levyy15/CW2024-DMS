@@ -32,6 +32,7 @@ public abstract class LevelParent extends Observable {
 	
 	private int currentNumberOfEnemies;
 	private LevelView levelView;
+	private boolean isPaused = false;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
@@ -111,6 +112,8 @@ public abstract class LevelParent extends Observable {
 				if (kc == KeyCode.UP) user.moveUp();
 				if (kc == KeyCode.DOWN) user.moveDown();
 				if (kc == KeyCode.SPACE) fireProjectile();
+				if (kc == KeyCode.M) fireUlt();
+				if (kc==KeyCode.P) togglePause();
 			}
 		});
 		background.setOnKeyReleased(new EventHandler<KeyEvent>() {
@@ -122,11 +125,51 @@ public abstract class LevelParent extends Observable {
 		root.getChildren().add(background);
 	}
 
+	// Method to toggle pause and resume the game
+	private void togglePause() {
+		if (isPaused) {
+			resumeGame();  // Resume the game if it's currently paused
+		} else {
+			pauseGame();   // Pause the game if it's running
+		}
+	}
+
+	// Method to pause the game
+	private void pauseGame() {
+		isPaused = true;
+		timeline.pause();  // Stop the game loop
+	}
+
+	// Method to resume the game
+	private void resumeGame() {
+		isPaused = false;
+		timeline.play();  // Restart the game loop
+	}
+
 	private void fireProjectile() {
 		ActiveActorDestructible projectile = user.fireProjectile();
 		root.getChildren().add(projectile);
 		userProjectiles.add(projectile);
 	}
+
+	private void fireUlt() {
+		double initialX = user.getX();  // Get the user's position
+		double initialY = user.getY();  // Get the user's Y position
+
+		// Define slight angle offsets for the three projectiles
+		double[] angleOffsets = {-5, 0, 5};  // Spread by 5 degrees in each direction
+
+		for (double angleOffset : angleOffsets) {
+			// Create the projectile with the given angle offset
+			UserProjectileUlt projectile = new UserProjectileUlt(initialX, initialY, angleOffset);
+
+			// Add the projectile to the game world
+			root.getChildren().add(projectile);
+			userProjectiles.add(projectile);
+		}
+	}
+
+
 
 	private void generateEnemyFire() {
 		enemyUnits.forEach(enemy -> spawnEnemyProjectile(((FighterPlane) enemy).fireProjectile()));
