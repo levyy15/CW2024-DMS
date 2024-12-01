@@ -5,7 +5,7 @@ public class UserProjectileUlt extends Projectile {
     private static final String IMAGE_NAME = "userfire.png";
     private static final int IMAGE_HEIGHT = 45;
     private static final int HORIZONTAL_VELOCITY = 15;
-
+    private static final int VERTICAL_VELOCITY = 8;
     private double velocityX;
     private double velocityY;
 
@@ -31,12 +31,4 @@ public class UserProjectileUlt extends Projectile {
         updatePosition();
     }
 
-    // Getters for velocity (optional, but useful if needed later)
-    public double getVelocityX() {
-        return velocityX;
-    }
-
-    public double getVelocityY() {
-        return velocityY;
-    }
 }

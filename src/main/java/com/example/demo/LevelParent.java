@@ -3,6 +3,10 @@ package com.example.demo;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+
 import javafx.animation.*;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -33,6 +37,7 @@ public abstract class LevelParent extends Observable {
 	private int currentNumberOfEnemies;
 	private LevelView levelView;
 	private boolean isPaused = false;
+	private Label pauseLabel;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
@@ -153,22 +158,23 @@ public abstract class LevelParent extends Observable {
 	}
 
 	private void fireUlt() {
-		double initialX = user.getX();  // Get the user's position
-		double initialY = user.getY();  // Get the user's Y position
+		// Use the current position of the UserPlane
+		double centerX = user.getTranslateX() + user.getLayoutX() + 110; // Adjust for plane's X offset
+		double centerY = user.getTranslateY() + user.getLayoutY() + 20;  // Adjust for plane's Y offset
 
 		// Define slight angle offsets for the three projectiles
 		double[] angleOffsets = {-5, 0, 5};  // Spread by 5 degrees in each direction
 
+		// Loop to create three projectiles with different angle offsets
 		for (double angleOffset : angleOffsets) {
-			// Create the projectile with the given angle offset
-			UserProjectileUlt projectile = new UserProjectileUlt(initialX, initialY, angleOffset);
+			// Create the projectile using the user's current position and angleOffset
+			UserProjectileUlt projectile = new UserProjectileUlt(centerX, centerY, angleOffset);
 
-			// Add the projectile to the game world
+			// Add the projectile to the root node and track it
 			root.getChildren().add(projectile);
 			userProjectiles.add(projectile);
 		}
 	}
-
 
 
 	private void generateEnemyFire() {
@@ -283,6 +289,9 @@ public abstract class LevelParent extends Observable {
 
 	protected double getScreenWidth() {
 		return screenWidth;
+	}
+	protected double getScreenHeight(){
+		return screenHeight;
 	}
 
 	protected boolean userIsDestroyed() {
