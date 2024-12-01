@@ -1,9 +1,10 @@
 package com.example.demo.controller;
 
-import java.lang.reflect.InvocationTargetException;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 
 public class Main extends Application {
 
@@ -13,14 +14,28 @@ public class Main extends Application {
 	private Controller myController;
 
 	@Override
-	public void start(Stage stage) throws ClassNotFoundException, NoSuchMethodException, SecurityException,
-			InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+	public void start(Stage stage) throws Exception {
 		stage.setTitle(TITLE);
 		stage.setResizable(false);
 		stage.setHeight(SCREEN_HEIGHT);
 		stage.setWidth(SCREEN_WIDTH);
-		myController = new Controller(stage);
-		myController.launchGame();
+
+		// Load the main menu FXML
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/images/menu/MainMenu.fxml"));
+		Parent root = loader.load();
+
+		// Set the scene for the main menu
+		Scene mainMenuScene = new Scene(root);
+		stage.setScene(mainMenuScene);
+
+		// Pass the stage reference to MainMenuController
+		MainMenuController controller = loader.getController();
+		controller.setStage(stage);
+
+		// Show the stage
+		stage.show();
+
+
 	}
 
 	public static void main(String[] args) {
