@@ -15,6 +15,9 @@ import javafx.scene.image.*;
 import javafx.scene.input.*;
 import javafx.util.Duration;
 
+import javafx.scene.layout.HBox;
+import javafx.scene.control.ProgressBar;
+
 public abstract class LevelParent extends Observable {
 
 	private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
@@ -37,7 +40,9 @@ public abstract class LevelParent extends Observable {
 	private int currentNumberOfEnemies;
 	private LevelView levelView;
 	private boolean isPaused = false;
-	private Label pauseLabel;
+	private HBox bossHealthContainer;
+	private Label bossHealthLabel;
+	private ProgressBar bossHealthBar;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
@@ -71,6 +76,7 @@ public abstract class LevelParent extends Observable {
 		initializeBackground();
 		initializeFriendlyUnits();
 		levelView.showHeartDisplay();
+		initializeBossHealthDisplay();
 		return scene;
 	}
 
@@ -151,6 +157,37 @@ public abstract class LevelParent extends Observable {
 		timeline.play();  // Restart the game loop
 	}
 
+	protected void initializeBossHealthDisplay() {
+		// Only create boss health bar if this is LevelThree
+		if (this instanceof LevelThree) {
+			bossHealthContainer = new HBox();
+			bossHealthContainer.setSpacing(10);
+			bossHealthContainer.setLayoutX(50); // Adjust X position
+			bossHealthContainer.setLayoutY(100); // Adjust below heart display
+
+			bossHealthLabel = new Label("Boss Health: ");
+			bossHealthLabel.setFont(new Font("Arial", 20));
+			bossHealthLabel.setTextFill(Color.RED);
+
+			bossHealthBar = new ProgressBar(1.0); // Full health at start
+			bossHealthBar.setPrefWidth(300);
+
+			bossHealthContainer.getChildren().addAll(bossHealthLabel, bossHealthBar);
+			root.getChildren().add(bossHealthContainer);
+		}
+	}
+
+	public void updateBossHealth(Boss boss) {
+		// Update the boss health bar only if it's LevelThree and the bar exists
+		if (this instanceof LevelThree && bossHealthBar != null) {
+			double healthPercentage = (double) boss.getHealth() / boss.getMaxHealth();
+			bossHealthBar.setProgress(healthPercentage);
+			if (healthPercentage <= 0) {
+				root.getChildren().remove(bossHealthContainer);
+			}
+		}
+	}
+
 	private void fireProjectile() {
 		ActiveActorDestructible projectile = user.fireProjectile();
 		root.getChildren().add(projectile);
@@ -215,6 +252,11 @@ public abstract class LevelParent extends Observable {
 
 	private void handleUserProjectileCollisions() {
 		handleCollisions(userProjectiles, enemyUnits);
+		for (ActiveActorDestructible actor : enemyUnits) {
+			if (actor instanceof Boss) {
+				updateBossHealth((Boss) actor);
+			}
+		}
 	}
 
 	private void handleEnemyProjectileCollisions() {
