@@ -36,10 +36,11 @@ public abstract class LevelParent extends Observable {
 	private final List<ActiveActorDestructible> enemyUnits;
 	private final List<ActiveActorDestructible> userProjectiles;
 	private final List<ActiveActorDestructible> enemyProjectiles;
-	
+
 	private int currentNumberOfEnemies;
 	private LevelView levelView;
 	private boolean isPaused = false;
+	private Label pausedLabel;
 	private HBox bossHealthContainer;
 	private Label bossHealthLabel;
 	private ProgressBar bossHealthBar;
@@ -77,6 +78,7 @@ public abstract class LevelParent extends Observable {
 		initializeFriendlyUnits();
 		levelView.showHeartDisplay();
 		initializeBossHealthDisplay();
+		initializePausedLabelDisplay();
 		return scene;
 	}
 
@@ -145,16 +147,28 @@ public abstract class LevelParent extends Observable {
 		}
 	}
 
+	private void initializePausedLabelDisplay() {
+		this.pausedLabel = new Label("PAUSED");
+		this.pausedLabel.setFont(new Font("Arial", 50));  // Set large font size
+		this.pausedLabel.setTextFill(Color.RED);  // Set the text color to red
+		this.pausedLabel.setVisible(false);  // Initially hidden
+		this.pausedLabel.setLayoutX(screenWidth / 2 - 100);  // Center horizontally
+		this.pausedLabel.setLayoutY(screenHeight / 2 - 25);  // Center vertically
+		root.getChildren().add(pausedLabel);  // Add the label to the root group
+	}
+
 	// Method to pause the game
 	private void pauseGame() {
 		isPaused = true;
 		timeline.pause();  // Stop the game loop
+		pausedLabel.setVisible(true);
 	}
 
 	// Method to resume the game
 	private void resumeGame() {
 		isPaused = false;
 		timeline.play();  // Restart the game loop
+		pausedLabel.setVisible(false);
 	}
 
 	protected void initializeBossHealthDisplay() {
@@ -264,7 +278,7 @@ public abstract class LevelParent extends Observable {
 	}
 
 	private void handleCollisions(List<ActiveActorDestructible> actors1,
-			List<ActiveActorDestructible> actors2) {
+								  List<ActiveActorDestructible> actors2) {
 		for (ActiveActorDestructible actor : actors2) {
 			for (ActiveActorDestructible otherActor : actors1) {
 				if (actor.getBoundsInParent().intersects(otherActor.getBoundsInParent())) {
