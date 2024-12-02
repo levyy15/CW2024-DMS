@@ -18,6 +18,12 @@ import javafx.util.Duration;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.ProgressBar;
 
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+
+import com.example.demo.controller.Sound;
+
+
 public abstract class LevelParent extends Observable {
 
 	private static final double SCREEN_HEIGHT_ADJUSTMENT = 150;
@@ -44,6 +50,8 @@ public abstract class LevelParent extends Observable {
 	private HBox bossHealthContainer;
 	private Label bossHealthLabel;
 	private ProgressBar bossHealthBar;
+	private Button settingsButton;
+	private Sound soundEffects;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
@@ -61,6 +69,8 @@ public abstract class LevelParent extends Observable {
 		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
 		this.levelView = instantiateLevelView();
 		this.currentNumberOfEnemies = 0;
+
+		this.soundEffects = new Sound(); // Initialize sound effects
 		initializeTimeline();
 		friendlyUnits.add(user);
 	}
@@ -79,6 +89,7 @@ public abstract class LevelParent extends Observable {
 		levelView.showHeartDisplay();
 		initializeBossHealthDisplay();
 		initializePausedLabelDisplay();
+//		initializeSettingsButton();
 		return scene;
 	}
 
@@ -171,6 +182,31 @@ public abstract class LevelParent extends Observable {
 		pausedLabel.setVisible(false);
 	}
 
+	// Initialize the settings button at the bottom-right of the screen
+//	private void initializeSettingsButton() {
+//		// Create a simple button with the text "SETTINGS"
+//		settingsButton = new Button("SETTINGS");
+//		settingsButton.setStyle("-fx-font-size: 20px; -fx-background-color: brown; -fx-border-color: white;");
+//
+//		// Position the button at the bottom-right corner
+//		StackPane.setAlignment(settingsButton, javafx.geometry.Pos.BOTTOM_RIGHT);
+//
+//		// Add the settings button to the root container
+//		StackPane rootLayout = new StackPane();
+//		rootLayout.getChildren().add(root);  // Add the game root as background
+//		rootLayout.getChildren().add(settingsButton);  // Add settings button on top
+//
+//		// Set the new root layout for the scene
+//		scene.setRoot(rootLayout);
+//
+//		// Event handler for the settings button
+//		settingsButton.setOnAction(event -> {
+//			System.out.println("Settings button clicked!");
+//			// Implement the logic for opening the settings menu here
+//		});
+//	}
+
+
 	protected void initializeBossHealthDisplay() {
 		// Only create boss health bar if this is LevelThree
 		if (this instanceof LevelThree) {
@@ -206,6 +242,10 @@ public abstract class LevelParent extends Observable {
 		ActiveActorDestructible projectile = user.fireProjectile();
 		root.getChildren().add(projectile);
 		userProjectiles.add(projectile);
+
+		// Play sound for firing projectile
+		soundEffects.setFile(1); // Index for bullet sound
+		soundEffects.play();
 	}
 
 	private void fireUlt() {
@@ -224,6 +264,10 @@ public abstract class LevelParent extends Observable {
 			// Add the projectile to the root node and track it
 			root.getChildren().add(projectile);
 			userProjectiles.add(projectile);
+
+			// Play sound for firing projectile
+			soundEffects.setFile(2); // Index for bullet sound
+			soundEffects.play();
 		}
 	}
 
@@ -236,6 +280,8 @@ public abstract class LevelParent extends Observable {
 		if (projectile != null) {
 			root.getChildren().add(projectile);
 			enemyProjectiles.add(projectile);
+			soundEffects.setFile(3); // Index for bullet sound
+			soundEffects.play();
 		}
 	}
 

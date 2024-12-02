@@ -12,6 +12,7 @@ public class Main extends Application {
 	private static final int SCREEN_HEIGHT = 750;
 	private static final String TITLE = "Sky Battle";
 	private Controller myController;
+	private Sound backgroundMusic;
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -19,6 +20,11 @@ public class Main extends Application {
 		stage.setResizable(false);
 		stage.setHeight(SCREEN_HEIGHT);
 		stage.setWidth(SCREEN_WIDTH);
+
+		// Initialize background music
+		backgroundMusic = new Sound();
+		backgroundMusic.setFile(0); // Index for background music
+		backgroundMusic.loop(); // Loop the background music
 
 		// Load the main menu FXML
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/images/menu/MainMenu.fxml"));
@@ -35,10 +41,18 @@ public class Main extends Application {
 		// Show the stage
 		stage.show();
 
-
 	}
 
-	public static void main(String[] args) {
+	@Override
+	public void stop() throws Exception {
+		// Stop music when the application is closed
+		if (backgroundMusic != null) {
+			backgroundMusic.stop();
+		}
+		super.stop();
+	}
+
+		public static void main(String[] args) {
 		launch();
 	}
 }
