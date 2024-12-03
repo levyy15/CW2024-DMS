@@ -1,4 +1,4 @@
 .bodybg {
-    -fx-background-color: #D3F0F5;
+    -fx-background-image: url("../backgroundmenu.jpg");
+    -fx-background-size: 100% 100%;
 }
-

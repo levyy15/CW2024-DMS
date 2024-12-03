@@ -5,18 +5,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="750.0" prefWidth="1300.0" styleClass="bodybg" stylesheets="@MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.controller.MainMenuController">
-      <Button fx:id="startGameButton" layoutX="499.0" layoutY="375.0" mnemonicParsing="false" text="START GAME">
+<AnchorPane prefHeight="800.0" prefWidth="1550.0" styleClass="bodybg" stylesheets="@MainMenu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.demo.controller.MainMenuController">
+      <Button fx:id="startGameButton" layoutX="622.0" layoutY="400.0" mnemonicParsing="false" style="-fx-background-color: #107c10;" text="START GAME" textFill="WHITE">
       <font>
-         <Font name="Castellar" size="36.0" />
+         <Font name="Century" size="36.0" />
       </font></Button>
-      <Button fx:id="quitButton" layoutX="576.0" layoutY="507.0" mnemonicParsing="false" text="QUIT">
+      <Button fx:id="quitButton" layoutX="698.0" layoutY="509.0" mnemonicParsing="false" style="-fx-background-color: #d04242;" text="QUIT" textFill="WHITE">
       <font>
-         <Font name="Castellar" size="36.0" />
+         <Font name="Century" size="36.0" />
       </font></Button>
-      <Label layoutX="413.0" layoutY="197.0" text="SKY BATTLE">
+      <Label layoutX="505.0" layoutY="199.0" text="SKY BATTLE" textFill="RED">
          <font>
-            <Font name="Castellar" size="72.0" />
+            <Font name="Century" size="82.0" />
          </font>
       </Label>
 </AnchorPane>
