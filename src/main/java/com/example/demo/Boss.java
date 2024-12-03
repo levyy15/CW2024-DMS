@@ -5,7 +5,7 @@ import java.util.*;
 public class Boss extends FighterPlane {
 
 	private static final String IMAGE_NAME = "bossplane.png";
-	private static final double INITIAL_X_POSITION = 1000.0;
+	private static final double INITIAL_X_POSITION = 1200.0;
 	private static final double INITIAL_Y_POSITION = 400;
 	private static final double PROJECTILE_Y_POSITION_OFFSET = 75.0;
 	private static final double BOSS_FIRE_RATE = .04;
@@ -104,7 +104,7 @@ public class Boss extends FighterPlane {
 		return getLayoutY() + getTranslateY() + PROJECTILE_Y_POSITION_OFFSET;
 	}
 
-	private boolean shieldShouldBeActivated() {
+	public boolean shieldShouldBeActivated() {
 		return Math.random() < BOSS_SHIELD_PROBABILITY;
 	}
 
@@ -112,13 +112,28 @@ public class Boss extends FighterPlane {
 		return framesWithShieldActivated == MAX_FRAMES_WITH_SHIELD;
 	}
 
-	private void activateShield() {
+	public void activateShield() {
 		isShielded = true;
+		setShrinkFactorHeight(0.4);
+		setShrinkFactorWidth(0.7);
 	}
 
-	private void deactivateShield() {
+	public void deactivateShield() {
 		isShielded = false;
 		framesWithShieldActivated = 0;
+		setShrinkFactorHeight(0.1);
+		setShrinkFactorWidth(0.5);
+	}
+	public int getFramesWithShieldActivated(){
+		return framesWithShieldActivated;
+	}
+
+	public boolean isShielded(){
+		return isShielded;
+	}
+	public void setShielded(boolean shielded){
+		isShielded = shielded;
+		if (!isShielded) deactivateShield();
 	}
 
 }

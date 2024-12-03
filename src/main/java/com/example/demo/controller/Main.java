@@ -8,8 +8,8 @@ import javafx.scene.Scene;
 
 public class Main extends Application {
 
-	private static final int SCREEN_WIDTH = 1300;
-	private static final int SCREEN_HEIGHT = 750;
+	private static final int SCREEN_WIDTH = 1550;
+	private static final int SCREEN_HEIGHT = 800;
 	private static final String TITLE = "Sky Battle";
 	private Controller myController;
 	private Sound backgroundMusic;

@@ -23,6 +23,9 @@ import javafx.scene.layout.StackPane;
 
 import com.example.demo.controller.Sound;
 
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.shape.Rectangle;
+
 
 public abstract class LevelParent extends Observable {
 
@@ -52,6 +55,8 @@ public abstract class LevelParent extends Observable {
 	private ProgressBar bossHealthBar;
 	private Button settingsButton;
 	private Sound soundEffects;
+	private Rectangle dimOverlay;
+	private BoxBlur blurEffect;
 
 	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
 		this.root = new Group();
@@ -105,7 +110,7 @@ public abstract class LevelParent extends Observable {
 		timeline.stop();
 	}
 
-	private void updateScene() {
+	protected void updateScene() {
 		spawnEnemyUnits();
 		updateActors();
 		generateEnemyFire();
@@ -138,6 +143,7 @@ public abstract class LevelParent extends Observable {
 				if (kc == KeyCode.SPACE) fireProjectile();
 				if (kc == KeyCode.M) fireUlt();
 				if (kc==KeyCode.P) togglePause();
+				if (kc==KeyCode.ESCAPE) options();
 			}
 		});
 		background.setOnKeyReleased(new EventHandler<KeyEvent>() {
@@ -156,16 +162,29 @@ public abstract class LevelParent extends Observable {
 		} else {
 			pauseGame();   // Pause the game if it's running
 		}
+
+		dimOverlay.toFront();
+		pausedLabel.toFront();
 	}
 
 	private void initializePausedLabelDisplay() {
+		// Create a semi-transparent rectangle for the dim effect
+		this.dimOverlay = new Rectangle(screenWidth, screenHeight, Color.BLACK);
+		this.dimOverlay.setOpacity(0.5);  // Semi-transparent
+		this.dimOverlay.setVisible(false);  // Initially hidden
+
 		this.pausedLabel = new Label("PAUSED");
 		this.pausedLabel.setFont(new Font("Arial", 50));  // Set large font size
 		this.pausedLabel.setTextFill(Color.RED);  // Set the text color to red
 		this.pausedLabel.setVisible(false);  // Initially hidden
 		this.pausedLabel.setLayoutX(screenWidth / 2 - 100);  // Center horizontally
 		this.pausedLabel.setLayoutY(screenHeight / 2 - 25);  // Center vertically
-		root.getChildren().add(pausedLabel);  // Add the label to the root group
+
+
+		// Create a blur effect
+		this.blurEffect = new BoxBlur(10, 10, 3);  // Blur radius and iterations
+
+		root.getChildren().addAll(dimOverlay, pausedLabel);  // Add the label to the root group
 	}
 
 	// Method to pause the game
@@ -173,6 +192,7 @@ public abstract class LevelParent extends Observable {
 		isPaused = true;
 		timeline.pause();  // Stop the game loop
 		pausedLabel.setVisible(true);
+		dimOverlay.setVisible(true);
 	}
 
 	// Method to resume the game
@@ -180,31 +200,12 @@ public abstract class LevelParent extends Observable {
 		isPaused = false;
 		timeline.play();  // Restart the game loop
 		pausedLabel.setVisible(false);
+		dimOverlay.setVisible(false);
 	}
 
-	// Initialize the settings button at the bottom-right of the screen
-//	private void initializeSettingsButton() {
-//		// Create a simple button with the text "SETTINGS"
-//		settingsButton = new Button("SETTINGS");
-//		settingsButton.setStyle("-fx-font-size: 20px; -fx-background-color: brown; -fx-border-color: white;");
-//
-//		// Position the button at the bottom-right corner
-//		StackPane.setAlignment(settingsButton, javafx.geometry.Pos.BOTTOM_RIGHT);
-//
-//		// Add the settings button to the root container
-//		StackPane rootLayout = new StackPane();
-//		rootLayout.getChildren().add(root);  // Add the game root as background
-//		rootLayout.getChildren().add(settingsButton);  // Add settings button on top
-//
-//		// Set the new root layout for the scene
-//		scene.setRoot(rootLayout);
-//
-//		// Event handler for the settings button
-//		settingsButton.setOnAction(event -> {
-//			System.out.println("Settings button clicked!");
-//			// Implement the logic for opening the settings menu here
-//		});
-//	}
+	private void options(){
+		
+	}
 
 
 	protected void initializeBossHealthDisplay() {
