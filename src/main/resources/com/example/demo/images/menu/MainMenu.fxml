@@ -14,7 +14,7 @@
       <font>
          <Font name="Century" size="36.0" />
       </font></Button>
-      <Label layoutX="505.0" layoutY="199.0" text="SKY BATTLE" textFill="RED">
+      <Label layoutX="505.0" layoutY="199.0" text="SKY BATTLE" textFill="#8ffdff">
          <font>
             <Font name="Century" size="82.0" />
          </font>

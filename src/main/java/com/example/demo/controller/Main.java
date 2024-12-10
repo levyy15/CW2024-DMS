@@ -9,7 +9,7 @@ import javafx.scene.Scene;
 public class Main extends Application {
 
 	private static final int SCREEN_WIDTH = 1550;
-	private static final int SCREEN_HEIGHT = 800;
+	private static final int SCREEN_HEIGHT = 900;
 	private static final String TITLE = "Sky Battle";
 	private Controller myController;
 	private Sound backgroundMusic;
@@ -24,7 +24,9 @@ public class Main extends Application {
 		// Initialize background music
 		backgroundMusic = new Sound();
 		backgroundMusic.setFile(0); // Index for background music
-		backgroundMusic.loop(); // Loop the background music
+
+		// Start playing the music in a loop
+		backgroundMusic.loop();
 
 		// Load the main menu FXML
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/images/menu/MainMenu.fxml"));
