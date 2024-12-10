@@ -2,16 +2,17 @@ package com.example.demo;
 
 public class LevelThree extends LevelParent {
 
-    private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/backgroundboss.jpg";
+    private static final String BACKGROUND_IMAGE_NAME = "/com/example/demo/images/backgroundboss.gif";
     private static final int PLAYER_INITIAL_HEALTH = 5;
     private final Boss boss;
     private LevelViewLevelThree levelView;
     private ShieldImage shieldImage;
+    private static final int KIILS_TO_ADVANCED = 1 ;
 
     public LevelThree(double screenHeight, double screenWidth) {
-        super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH);
+        super(BACKGROUND_IMAGE_NAME, screenHeight, screenWidth, PLAYER_INITIAL_HEALTH, KIILS_TO_ADVANCED);
         boss = new Boss();
-        shieldImage = new ShieldImage(boss.getLayoutX(), boss.getLayoutY());
+        shieldImage = new ShieldImage(boss.getLayoutX() - 50, boss.getLayoutY() - 100);
     }
 
     @Override
