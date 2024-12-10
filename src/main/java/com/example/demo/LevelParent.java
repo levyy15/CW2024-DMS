@@ -1,4 +1,6 @@
 package com.example.demo;
+import com.example.demo.controller.MainMenuController;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,18 +15,26 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.*;
 import javafx.scene.input.*;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.control.ProgressBar;
 
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.geometry.Pos;
 
 import com.example.demo.controller.Sound;
 
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.shape.Rectangle;
+import javafx.application.Platform;
+
+import javafx.fxml.FXMLLoader;  // For loading FXML files
+import javafx.scene.Parent;     // For the root of the scene
+import javafx.stage.Stage;
+import javafx.scene.text.Font;
 
 
 public abstract class LevelParent extends Observable {
@@ -55,10 +65,18 @@ public abstract class LevelParent extends Observable {
 	private ProgressBar bossHealthBar;
 	private Button settingsButton;
 	private Sound soundEffects;
+	private Sound backgroundMusic;
+
 	private Rectangle dimOverlay;
 	private BoxBlur blurEffect;
+	private VBox optionsBox;
+	private final int killsToAdvance;
+	private Text killCountText;
 
-	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth) {
+
+
+
+	public LevelParent(String backgroundImageName, double screenHeight, double screenWidth, int playerInitialHealth, int killsToAdvance) {
 		this.root = new Group();
 		this.scene = new Scene(root, screenWidth, screenHeight);
 		this.timeline = new Timeline();
@@ -67,6 +85,7 @@ public abstract class LevelParent extends Observable {
 		this.enemyUnits = new ArrayList<>();
 		this.userProjectiles = new ArrayList<>();
 		this.enemyProjectiles = new ArrayList<>();
+		this.killsToAdvance = killsToAdvance;
 
 		this.background = new ImageView(new Image(getClass().getResource(backgroundImageName).toExternalForm()));
 		this.screenHeight = screenHeight;
@@ -76,6 +95,7 @@ public abstract class LevelParent extends Observable {
 		this.currentNumberOfEnemies = 0;
 
 		this.soundEffects = new Sound(); // Initialize sound effects
+		this.backgroundMusic = new Sound();
 		initializeTimeline();
 		friendlyUnits.add(user);
 	}
@@ -94,7 +114,8 @@ public abstract class LevelParent extends Observable {
 		levelView.showHeartDisplay();
 		initializeBossHealthDisplay();
 		initializePausedLabelDisplay();
-//		initializeSettingsButton();
+		initializeSettingsButton();
+		initializeKillCounter();
 		return scene;
 	}
 
@@ -123,6 +144,7 @@ public abstract class LevelParent extends Observable {
 		updateKillCount();
 		updateLevelView();
 		checkIfGameOver();
+
 	}
 
 	private void initializeTimeline() {
@@ -173,8 +195,10 @@ public abstract class LevelParent extends Observable {
 		this.dimOverlay.setOpacity(0.5);  // Semi-transparent
 		this.dimOverlay.setVisible(false);  // Initially hidden
 
+		Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 70);
+
 		this.pausedLabel = new Label("PAUSED");
-		this.pausedLabel.setFont(new Font("Arial", 50));  // Set large font size
+		this.pausedLabel.setFont(pixelFont);  // Set the pixelated font
 		this.pausedLabel.setTextFill(Color.RED);  // Set the text color to red
 		this.pausedLabel.setVisible(false);  // Initially hidden
 		this.pausedLabel.setLayoutX(screenWidth / 2 - 100);  // Center horizontally
@@ -203,8 +227,119 @@ public abstract class LevelParent extends Observable {
 		dimOverlay.setVisible(false);
 	}
 
-	private void options(){
-		
+	private void initializeSettingsButton() {
+		settingsButton = new Button("Options");
+		Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 22);
+
+		settingsButton.setFont(pixelFont); // Optional: Style the button
+		settingsButton.setStyle("-fx-background-color: #000; -fx-text-fill: #fff;"); // Optional CSS for better visibility
+
+		// Position the button on the right-hand side of the screen
+		settingsButton.setLayoutX(screenWidth - 150); // Offset by the button's width
+		settingsButton.setLayoutY(20); // Adjust this to position vertically
+
+		settingsButton.setOnAction(e -> options()); // Attach options functionality
+
+		root.getChildren().add(settingsButton);
+	}
+
+	private void options() {
+		if (optionsBox == null) {
+			Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 24);
+
+			// Initialize the options box only once
+			optionsBox = new VBox();
+			optionsBox.setLayoutX(screenWidth / 2 - 300);
+			optionsBox.setLayoutY(screenHeight / 2 - 200);
+			optionsBox.setStyle(" -fx-background-color: rgba(0, 0, 0, 0.7); -fx-padding: 70px; -fx-border-color: white; -fx-border-width: 2px; -fx-spacing: 10px;");
+
+			Button menuButton = new Button("Main Menu");
+			menuButton.setFont(pixelFont);
+			menuButton.setStyle("-fx-padding: 10px 20px; -fx-min-width: 450px;");
+
+			menuButton.setOnAction(e -> {
+				timeline.stop();
+				// Load the main menu scene
+				loadMainMenu();
+			});
+
+			Button quitButton = new Button("Quit");
+			quitButton.setFont(pixelFont);
+			quitButton.setStyle("-fx-padding: 10px 20px; -fx-min-width: 450px;");
+
+			quitButton.setOnAction(e -> System.exit(0));
+
+			Button continueButton = new Button("Continue");
+			continueButton.setFont(pixelFont);
+			continueButton.setStyle("-fx-padding: 10px 20px; -fx-min-width: 450px;");
+
+			continueButton.setOnAction(e -> {
+				// Hide the options box and resume the game
+				optionsBox.setVisible(false);
+				startGame();
+			});
+
+			optionsBox.getChildren().addAll(menuButton, continueButton, quitButton);
+			root.getChildren().add(optionsBox);
+		}
+
+		// Show the options box when the options method is called
+		optionsBox.setVisible(true);
+		timeline.stop(); // Stop the game timeline when options are shown
+	}
+
+	private void loadMainMenu() {
+		try {
+			// Load the main menu FXML
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/images/menu/MainMenu.fxml"));
+			Parent rootMenu = loader.load();
+
+			// Create a new scene for the main menu
+			Scene mainMenuScene = new Scene(rootMenu);
+
+			// Get the current stage and set the main menu scene
+			Stage primaryStage = (Stage) root.getScene().getWindow();  // Get the current stage
+			primaryStage.setScene(mainMenuScene);  // Set the new scene for the main menu
+
+			// Pass the stage reference to MainMenuController
+			MainMenuController controller = loader.getController();
+			controller.setStage(primaryStage);  // Ensure the stage reference is passed
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void showEndOptions() {
+		VBox optionsBox = new VBox(10); // VBox to hold the buttons
+		Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 24);
+
+		optionsBox.setAlignment(Pos.CENTER);
+		optionsBox.setLayoutX(screenWidth / 2 - 300);
+		optionsBox.setLayoutY(screenHeight / 2 - 0);
+		optionsBox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7); -fx-padding: 70px; -fx-border-color: white; -fx-border-width: 2px; -fx-spacing: 10px;");
+
+		// Restart button
+		Button restartButton = new Button("Restart");
+		restartButton.setFont(pixelFont);
+		restartButton.setStyle("-fx-padding: 10px 20px; -fx-min-width: 450px;");
+		restartButton.setOnAction(event -> handleRestartGame()); // Reuse the start logic
+
+		// Exit button
+		Button exitButton = new Button("Exit");
+		exitButton.setFont(pixelFont);
+		exitButton.setStyle("-fx-padding: 10px 20px; -fx-min-width: 450px;");
+		exitButton.setOnAction(event -> Platform.exit());
+
+		// Add buttons to the VBox
+		optionsBox.getChildren().addAll(restartButton, exitButton);
+
+		// Add the VBox to the scene
+		root.getChildren().add(optionsBox);
+	}
+	private void handleRestartGame() {
+		setChanged();
+		notifyObservers("com.example.demo.LevelOne");
 	}
 
 
@@ -213,19 +348,31 @@ public abstract class LevelParent extends Observable {
 		if (this instanceof LevelThree) {
 			bossHealthContainer = new HBox();
 			bossHealthContainer.setSpacing(10);
-			bossHealthContainer.setLayoutX(50); // Adjust X position
-			bossHealthContainer.setLayoutY(100); // Adjust below heart display
+			bossHealthContainer.setLayoutX(450); // Adjust X position
+			bossHealthContainer.setLayoutY(50); // Adjust below heart display
 
 			bossHealthLabel = new Label("Boss Health: ");
-			bossHealthLabel.setFont(new Font("Arial", 20));
+			Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 28);
+			bossHealthLabel.setFont(pixelFont);
 			bossHealthLabel.setTextFill(Color.RED);
 
 			bossHealthBar = new ProgressBar(1.0); // Full health at start
-			bossHealthBar.setPrefWidth(300);
+			bossHealthBar.setPrefWidth(500);
+			bossHealthBar.setPrefHeight(25);
 
 			bossHealthContainer.getChildren().addAll(bossHealthLabel, bossHealthBar);
 			root.getChildren().add(bossHealthContainer);
 		}
+	}
+	protected void initializeKillCounter() {
+		killCountText = new Text("Kills: 0 / " + killsToAdvance);
+		Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 32);
+
+		killCountText.setFont(pixelFont);
+		killCountText.setFill(Color.WHITE);
+		killCountText.setX(8);
+		killCountText.setY(120);
+		root.getChildren().add(killCountText);
 	}
 
 	public void updateBossHealth(Boss boss) {
@@ -271,7 +418,6 @@ public abstract class LevelParent extends Observable {
 			soundEffects.play();
 		}
 	}
-
 
 	private void generateEnemyFire() {
 		enemyUnits.forEach(enemy -> spawnEnemyProjectile(((FighterPlane) enemy).fireProjectile()));
@@ -353,6 +499,7 @@ public abstract class LevelParent extends Observable {
 		for (int i = 0; i < currentNumberOfEnemies - enemyUnits.size(); i++) {
 			user.incrementKillCount();
 		}
+		killCountText.setText("Kills: " + user.getNumberOfKills() + " / " + killsToAdvance);
 	}
 
 	private boolean enemyHasPenetratedDefenses(ActiveActorDestructible enemy) {
@@ -362,11 +509,13 @@ public abstract class LevelParent extends Observable {
 	protected void winGame() {
 		timeline.stop();
 		levelView.showWinImage();
+		showEndOptions();
 	}
 
 	protected void loseGame() {
 		timeline.stop();
-		levelView.showGameOverImage(0.4,0.5);
+		levelView.showGameOverImage(0.4, 0.5);
+		showEndOptions();
 	}
 
 	protected UserPlane getUser() {
