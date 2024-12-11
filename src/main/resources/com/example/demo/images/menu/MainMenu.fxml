@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -14,9 +15,9 @@
       <font>
          <Font name="Century" size="36.0" />
       </font></Button>
-      <Label layoutX="505.0" layoutY="199.0" text="SKY BATTLE" textFill="#8ffdff">
-         <font>
-            <Font name="Century" size="82.0" />
-         </font>
-      </Label>
+   <ImageView fitHeight="241.0" fitWidth="680.0" layoutX="435.0" layoutY="159.0">
+      <image>
+         <Image url="@../skyBatlle.png" />
+      </image>
+   </ImageView>
 </AnchorPane>
