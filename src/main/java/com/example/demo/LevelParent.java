@@ -34,7 +34,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;  // For loading FXML files
 import javafx.scene.Parent;     // For the root of the scene
 import javafx.stage.Stage;
-import javafx.scene.text.Font;
 
 
 public abstract class LevelParent extends Observable {
@@ -57,19 +56,15 @@ public abstract class LevelParent extends Observable {
 	private final List<ActiveActorDestructible> enemyProjectiles;
 
 	private int currentNumberOfEnemies;
-	private LevelView levelView;
+	private final LevelView levelView;
 	private boolean isPaused = false;
 	private Label pausedLabel;
 	private HBox bossHealthContainer;
-	private Label bossHealthLabel;
-	private ProgressBar bossHealthBar;
-	private Button settingsButton;
-	private Sound soundEffects;
-	private Sound backgroundMusic;
+    private ProgressBar bossHealthBar;
+    private final Sound soundEffects;
 
-	private Rectangle dimOverlay;
-	private BoxBlur blurEffect;
-	private VBox optionsBox;
+    private Rectangle dimOverlay;
+    private VBox optionsBox;
 	private final int killsToAdvance;
 	private Text killCountText;
 
@@ -95,7 +90,7 @@ public abstract class LevelParent extends Observable {
 		this.currentNumberOfEnemies = 0;
 
 		this.soundEffects = new Sound(); // Initialize sound effects
-		this.backgroundMusic = new Sound();
+        Sound backgroundMusic = new Sound();
 		initializeTimeline();
 		friendlyUnits.add(user);
 	}
@@ -208,9 +203,9 @@ public abstract class LevelParent extends Observable {
 
 
 		// Create a blur effect
-		this.blurEffect = new BoxBlur(10, 10, 3);  // Blur radius and iterations
+        BoxBlur blurEffect = new BoxBlur(10, 10, 3);  // Blur radius and iterations
 
-		root.getChildren().addAll(dimOverlay, pausedLabel);  // Add the label to the root group
+        root.getChildren().addAll(dimOverlay, pausedLabel);  // Add the label to the root group
 	}
 
 	// Method to pause the game
@@ -230,7 +225,7 @@ public abstract class LevelParent extends Observable {
 	}
 
 	private void initializeSettingsButton() {
-		settingsButton = new Button("Options");
+        Button settingsButton = new Button("Options");
 		Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 22);
 
 		settingsButton.setFont(pixelFont); // Optional: Style the button
@@ -353,7 +348,7 @@ public abstract class LevelParent extends Observable {
 			bossHealthContainer.setLayoutX(450); // Adjust X position
 			bossHealthContainer.setLayoutY(50); // Adjust below heart display
 
-			bossHealthLabel = new Label("Boss Health: ");
+            Label bossHealthLabel = new Label("Boss Health: ");
 			Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 28);
 			bossHealthLabel.setFont(pixelFont);
 			bossHealthLabel.setTextFill(Color.RED);
@@ -543,9 +538,6 @@ public abstract class LevelParent extends Observable {
 
 	protected double getScreenWidth() {
 		return screenWidth;
-	}
-	protected double getScreenHeight(){
-		return screenHeight;
 	}
 
 	protected boolean userIsDestroyed() {
