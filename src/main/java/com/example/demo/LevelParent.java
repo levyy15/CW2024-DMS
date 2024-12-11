@@ -161,7 +161,9 @@ public abstract class LevelParent extends Observable {
 			public void handle(KeyEvent e) {
 				KeyCode kc = e.getCode();
 				if (kc == KeyCode.UP) user.moveUp();
+				if (kc == KeyCode.W) user.moveUp();
 				if (kc == KeyCode.DOWN) user.moveDown();
+				if (kc == KeyCode.S) user.moveDown();
 				if (kc == KeyCode.SPACE) fireProjectile();
 				if (kc == KeyCode.M) fireUlt();
 				if (kc==KeyCode.P) togglePause();

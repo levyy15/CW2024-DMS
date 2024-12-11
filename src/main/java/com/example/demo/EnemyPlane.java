@@ -34,4 +34,8 @@ public class EnemyPlane extends FighterPlane {
 		updatePosition();
 	}
 
+	public int getHorizontalVelocity(){
+		return HORIZONTAL_VELOCITY;
+	}
+
 }
