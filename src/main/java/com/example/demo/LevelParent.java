@@ -106,7 +106,7 @@ public abstract class LevelParent extends Observable {
 	public Scene initializeScene() {
 		initializeBackground();
 		initializeFriendlyUnits();
-		levelView.showHeartDisplay();
+		levelView.showHeartDisplay(user.getHealth());
 		initializeBossHealthDisplay();
 		initializePausedLabelDisplay();
 		initializeSettingsButton();
@@ -122,6 +122,7 @@ public abstract class LevelParent extends Observable {
 	public void goToNextLevel(String levelName) {
 		setChanged();
 		notifyObservers(levelName);
+		UserPlane.resetHealth(user.getHealth());
 
 		timeline.stop();
 	}
