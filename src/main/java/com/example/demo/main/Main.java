@@ -8,6 +8,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
+/**
+ * The Main class serves as the entry point for the Sky Battle game. It initializes
+ * the main menu, sets up the game window, and manages background music.
+ */
 public class Main extends Application {
 
 	private static final int SCREEN_WIDTH = 1550;
@@ -15,6 +19,13 @@ public class Main extends Application {
 	private static final String TITLE = "Sky Battle";
 	private Sound backgroundMusic;
 
+	/**
+	 * Starts the JavaFX application by setting up the main game window and initializing
+	 * the main menu.
+	 *
+	 * @param stage the primary stage for the application
+	 * @throws Exception if there is an error during initialization
+	 */
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle(TITLE);
@@ -46,6 +57,11 @@ public class Main extends Application {
 
 	}
 
+	/**
+	 * Stops the application and releases resources, including stopping the background music.
+	 *
+	 * @throws Exception if an error occurs during the stop process
+	 */
 	@Override
 	public void stop() throws Exception {
 		// Stop music when the application is closed
@@ -55,6 +71,11 @@ public class Main extends Application {
 		super.stop();
 	}
 
+	/**
+	 * The main method serves as the entry point for the application.
+	 *
+	 * @param args command-line arguments (not used in this application)
+	 */
 		public static void main(String[] args) {
 		launch();
 	}
