@@ -3,7 +3,6 @@ import com.example.demo.controller.MainMenuController;
 
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.example.demo.models.ActiveActorDestructible;
 import com.example.demo.models.Boss;
@@ -16,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import javafx.animation.*;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.*;
@@ -33,12 +31,11 @@ import javafx.geometry.Pos;
 
 import com.example.demo.Sound;
 
-import javafx.scene.effect.BoxBlur;
 import javafx.scene.shape.Rectangle;
 import javafx.application.Platform;
 
-import javafx.fxml.FXMLLoader;  // For loading FXML files
-import javafx.scene.Parent;     // For the root of the scene
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.stage.Stage;
 
 
@@ -88,15 +85,14 @@ public abstract class LevelParent extends Observable {
 		this.enemyProjectiles = new ArrayList<>();
 		this.killsToAdvance = killsToAdvance;
 
-		this.background = new ImageView(new Image(getClass().getResource(backgroundImageName).toExternalForm()));
+		this.background = new ImageView(new Image(Objects.requireNonNull(getClass().getResource(backgroundImageName)).toExternalForm()));
 		this.screenHeight = screenHeight;
 		this.screenWidth = screenWidth;
 		this.enemyMaximumYPosition = screenHeight - SCREEN_HEIGHT_ADJUSTMENT;
 		this.levelView = instantiateLevelView();
 		this.currentNumberOfEnemies = 0;
 
-		this.soundEffects = new Sound(); // Initialize sound effects
-        Sound backgroundMusic = new Sound();
+		this.soundEffects = new Sound();
 		initializeTimeline();
 		friendlyUnits.add(user);
 	}
@@ -159,34 +155,29 @@ public abstract class LevelParent extends Observable {
 		background.setFocusTraversable(true);
 		background.setFitHeight(screenHeight);
 		background.setFitWidth(screenWidth);
-		background.setOnKeyPressed(new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent e) {
-				KeyCode kc = e.getCode();
-				if (kc == KeyCode.UP) user.moveUp();
-				if (kc == KeyCode.W) user.moveUp();
-				if (kc == KeyCode.DOWN) user.moveDown();
-				if (kc == KeyCode.S) user.moveDown();
-				if (kc == KeyCode.SPACE) fireProjectile();
-				if (kc == KeyCode.M) fireUlt();
-				if (kc==KeyCode.P) togglePause();
-				if (kc==KeyCode.ESCAPE) options();
-			}
-		});
-		background.setOnKeyReleased(new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent e) {
-				KeyCode kc = e.getCode();
-				if (kc == KeyCode.UP || kc == KeyCode.DOWN) user.stop();
-			}
-		});
+		background.setOnKeyPressed(e -> {
+            KeyCode kc = e.getCode();
+            if (kc == KeyCode.UP) user.moveUp();
+            if (kc == KeyCode.W) user.moveUp();
+            if (kc == KeyCode.DOWN) user.moveDown();
+            if (kc == KeyCode.S) user.moveDown();
+            if (kc == KeyCode.SPACE) fireProjectile();
+            if (kc == KeyCode.M) fireUlt();
+            if (kc==KeyCode.P) togglePause();
+            if (kc==KeyCode.ESCAPE) options();
+        });
+		background.setOnKeyReleased(e -> {
+            KeyCode kc = e.getCode();
+            if (kc == KeyCode.UP || kc == KeyCode.DOWN) user.stop();
+        });
 		root.getChildren().add(background);
 	}
 
-	// Method to toggle pause and resume the game
 	private void togglePause() {
 		if (isPaused) {
-			resumeGame();  // Resume the game if it's currently paused
+			resumeGame();
 		} else {
-			pauseGame();   // Pause the game if it's running
+			pauseGame();
 		}
 
 		dimOverlay.toFront();
@@ -194,36 +185,29 @@ public abstract class LevelParent extends Observable {
 	}
 
 	private void initializePausedLabelDisplay() {
-		// Create a semi-transparent rectangle for the dim effect
 		this.dimOverlay = new Rectangle(screenWidth, screenHeight, Color.BLACK);
-		this.dimOverlay.setOpacity(0.5);  // Semi-transparent
-		this.dimOverlay.setVisible(false);  // Initially hidden
+		this.dimOverlay.setOpacity(0.5);
+		this.dimOverlay.setVisible(false);
 
 		Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 70);
 
 		this.pausedLabel = new Label("PAUSED");
-		this.pausedLabel.setFont(pixelFont);  // Set the pixelated font
-		this.pausedLabel.setTextFill(Color.RED);  // Set the text color to red
-		this.pausedLabel.setVisible(false);  // Initially hidden
-		this.pausedLabel.setLayoutX(screenWidth / 2 - 100);  // Center horizontally
-		this.pausedLabel.setLayoutY(screenHeight / 2 - 25);  // Center vertically
+		this.pausedLabel.setFont(pixelFont);
+		this.pausedLabel.setTextFill(Color.RED);
+		this.pausedLabel.setVisible(false);
+		this.pausedLabel.setLayoutX(screenWidth / 2 - 100);
+		this.pausedLabel.setLayoutY(screenHeight / 2 - 25);
 
-
-		// Create a blur effect
-        BoxBlur blurEffect = new BoxBlur(10, 10, 3);  // Blur radius and iterations
-
-        root.getChildren().addAll(dimOverlay, pausedLabel);  // Add the label to the root group
+        root.getChildren().addAll(dimOverlay, pausedLabel);
 	}
 
-	// Method to pause the game
 	private void pauseGame() {
 		isPaused = true;
-		timeline.pause();  // Stop the game loop
+		timeline.pause();
 		pausedLabel.setVisible(true);
 		dimOverlay.setVisible(true);
 	}
 
-	// Method to resume the game
 	private void resumeGame() {
 		isPaused = false;
 		timeline.play();
@@ -236,13 +220,12 @@ public abstract class LevelParent extends Observable {
 		Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 22);
 
 		settingsButton.setFont(pixelFont); // Optional: Style the button
-		settingsButton.setStyle("-fx-background-color: #000; -fx-text-fill: #fff;"); // Optional CSS for better visibility
+		settingsButton.setStyle("-fx-background-color: #000; -fx-text-fill: #fff;");
 
-		// Position the button on the right-hand side of the screen
-		settingsButton.setLayoutX(screenWidth - 150); // Offset by the button's width
-		settingsButton.setLayoutY(20); // Adjust this to position vertically
+		settingsButton.setLayoutX(screenWidth - 150);
+		settingsButton.setLayoutY(20);
 
-		settingsButton.setOnAction(e -> options()); // Attach options functionality
+		settingsButton.setOnAction(e -> options());
 
 		root.getChildren().add(settingsButton);
 	}
@@ -251,7 +234,6 @@ public abstract class LevelParent extends Observable {
 		if (optionsBox == null) {
 			Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 24);
 
-			// Initialize the options box only once
 			optionsBox = new VBox();
 			optionsBox.setLayoutX(screenWidth / 2 - 300);
 			optionsBox.setLayoutY(screenHeight / 2 - 200);
@@ -263,7 +245,6 @@ public abstract class LevelParent extends Observable {
 
 			menuButton.setOnAction(e -> {
 				timeline.stop();
-				// Load the main menu scene
 				loadMainMenu();
 			});
 
@@ -278,7 +259,6 @@ public abstract class LevelParent extends Observable {
 			continueButton.setStyle("-fx-padding: 10px 20px; -fx-min-width: 450px;");
 
 			continueButton.setOnAction(e -> {
-				// Hide the options box and resume the game
 				optionsBox.setVisible(false);
 				startGame();
 			});
@@ -287,27 +267,22 @@ public abstract class LevelParent extends Observable {
 			root.getChildren().add(optionsBox);
 		}
 
-		// Show the options box when the options method is called
 		optionsBox.setVisible(true);
-		timeline.stop(); // Stop the game timeline when options are shown
+		timeline.stop();
 	}
 
 	private void loadMainMenu() {
 		try {
-			// Load the main menu FXML
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/demo/images/menu/MainMenu.fxml"));
 			Parent rootMenu = loader.load();
 
-			// Create a new scene for the main menu
 			Scene mainMenuScene = new Scene(rootMenu);
 
-			// Get the current stage and set the main menu scene
-			Stage primaryStage = (Stage) root.getScene().getWindow();  // Get the current stage
-			primaryStage.setScene(mainMenuScene);  // Set the new scene for the main menu
+			Stage primaryStage = (Stage) root.getScene().getWindow();
+			primaryStage.setScene(mainMenuScene);
 
-			// Pass the stage reference to MainMenuController
 			MainMenuController controller = loader.getController();
-			controller.setStage(primaryStage);  // Ensure the stage reference is passed
+			controller.setStage(primaryStage);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -315,7 +290,7 @@ public abstract class LevelParent extends Observable {
 	}
 
 	public void showEndOptions() {
-		VBox optionsBox = new VBox(10); // VBox to hold the buttons
+		VBox optionsBox = new VBox(10);
 		Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 24);
 
 		optionsBox.setAlignment(Pos.CENTER);
@@ -323,22 +298,18 @@ public abstract class LevelParent extends Observable {
 		optionsBox.setLayoutY(screenHeight / 2 - 0);
 		optionsBox.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7); -fx-padding: 70px; -fx-border-color: white; -fx-border-width: 2px; -fx-spacing: 10px;");
 
-		// Restart button
 		Button restartButton = new Button("Restart");
 		restartButton.setFont(pixelFont);
 		restartButton.setStyle("-fx-padding: 10px 20px; -fx-min-width: 450px;");
-		restartButton.setOnAction(event -> handleRestartGame()); // Reuse the start logic
+		restartButton.setOnAction(event -> handleRestartGame());
 
-		// Exit button
 		Button exitButton = new Button("Exit");
 		exitButton.setFont(pixelFont);
 		exitButton.setStyle("-fx-padding: 10px 20px; -fx-min-width: 450px;");
 		exitButton.setOnAction(event -> Platform.exit());
 
-		// Add buttons to the VBox
 		optionsBox.getChildren().addAll(restartButton, exitButton);
 
-		// Add the VBox to the scene
 		root.getChildren().add(optionsBox);
 	}
 	private void handleRestartGame() {
@@ -348,19 +319,18 @@ public abstract class LevelParent extends Observable {
 
 
 	protected void initializeBossHealthDisplay() {
-		// Only create boss health bar if this is LevelThree
 		if (this instanceof LevelThree) {
 			bossHealthContainer = new HBox();
 			bossHealthContainer.setSpacing(10);
-			bossHealthContainer.setLayoutX(450); // Adjust X position
-			bossHealthContainer.setLayoutY(50); // Adjust below heart display
+			bossHealthContainer.setLayoutX(450);
+			bossHealthContainer.setLayoutY(50);
 
             Label bossHealthLabel = new Label("Boss Health: ");
 			Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 28);
 			bossHealthLabel.setFont(pixelFont);
 			bossHealthLabel.setTextFill(Color.RED);
 
-			bossHealthBar = new ProgressBar(1.0); // Full health at start
+			bossHealthBar = new ProgressBar(1.0);
 			bossHealthBar.setPrefWidth(500);
 			bossHealthBar.setPrefHeight(25);
 
@@ -380,7 +350,6 @@ public abstract class LevelParent extends Observable {
 	}
 
 	public void updateBossHealth(Boss boss) {
-		// Update the boss health bar only if it's LevelThree and the bar exists
 		if (this instanceof LevelThree && bossHealthBar != null) {
 			double healthPercentage = (double) boss.getHealth() / boss.getMaxHealth();
 			bossHealthBar.setProgress(healthPercentage);
@@ -395,30 +364,25 @@ public abstract class LevelParent extends Observable {
 		root.getChildren().add(projectile);
 		userProjectiles.add(projectile);
 
-		// Play sound for firing projectile
-		soundEffects.setFile(1); // Index for bullet sound
+		soundEffects.setFile(1);
 		soundEffects.play();
 	}
 
 	private void fireUlt() {
-		// Use the current position of the UserPlane
-		double centerX = user.getTranslateX() + user.getLayoutX() + 110; // Adjust for plane's X offset
-		double centerY = user.getTranslateY() + user.getLayoutY() + 20;  // Adjust for plane's Y offset
 
-		// Define slight angle offsets for the three projectiles
-		double[] angleOffsets = {-5, 0, 5};  // Spread by 5 degrees in each direction
+		double centerX = user.getTranslateX() + user.getLayoutX() + 110;
+		double centerY = user.getTranslateY() + user.getLayoutY() + 20;
 
-		// Loop to create three projectiles with different angle offsets
+		double[] angleOffsets = {-5, 0, 5};
+
 		for (double angleOffset : angleOffsets) {
-			// Create the projectile using the user's current position and angleOffset
+
 			UserProjectileUlt projectile = new UserProjectileUlt(centerX, centerY, angleOffset);
 
-			// Add the projectile to the root node and track it
 			root.getChildren().add(projectile);
 			userProjectiles.add(projectile);
 
-			// Play sound for firing projectile
-			soundEffects.setFile(2); // Index for bullet sound
+			soundEffects.setFile(2);
 			soundEffects.play();
 		}
 	}
@@ -431,16 +395,16 @@ public abstract class LevelParent extends Observable {
 		if (projectile != null) {
 			root.getChildren().add(projectile);
 			enemyProjectiles.add(projectile);
-			soundEffects.setFile(3); // Index for bullet sound
+			soundEffects.setFile(3);
 			soundEffects.play();
 		}
 	}
 
 	private void updateActors() {
-		friendlyUnits.forEach(plane -> plane.updateActor());
-		enemyUnits.forEach(enemy -> enemy.updateActor());
-		userProjectiles.forEach(projectile -> projectile.updateActor());
-		enemyProjectiles.forEach(projectile -> projectile.updateActor());
+		friendlyUnits.forEach(ActiveActorDestructible::updateActor);
+		enemyUnits.forEach(ActiveActorDestructible::updateActor);
+		userProjectiles.forEach(ActiveActorDestructible::updateActor);
+		enemyProjectiles.forEach(ActiveActorDestructible::updateActor);
 	}
 
 	private void removeAllDestroyedActors() {
@@ -451,8 +415,8 @@ public abstract class LevelParent extends Observable {
 	}
 
 	private void removeDestroyedActors(List<ActiveActorDestructible> actors) {
-		List<ActiveActorDestructible> destroyedActors = actors.stream().filter(actor -> actor.isDestroyed())
-				.collect(Collectors.toList());
+		List<ActiveActorDestructible> destroyedActors = actors.stream().filter(ActiveActorDestructible::isDestroyed)
+				.toList();
 		root.getChildren().removeAll(destroyedActors);
 		actors.removeAll(destroyedActors);
 	}

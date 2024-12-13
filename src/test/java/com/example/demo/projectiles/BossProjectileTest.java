@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.projectiles;
 
 import com.example.demo.projectiles.BossProjectile;
 import javafx.application.Platform;

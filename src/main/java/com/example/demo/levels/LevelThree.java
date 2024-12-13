@@ -11,7 +11,7 @@ public class LevelThree extends LevelParent {
     private static final int PLAYER_INITIAL_HEALTH = 5;
     private final Boss boss;
     private LevelViewLevelThree levelView;
-    private ShieldImage shieldImage;
+    private final ShieldImage shieldImage;
     private static final int KIILS_TO_ADVANCED = 1 ;
 
     public LevelThree(double screenHeight, double screenWidth) {

@@ -18,26 +18,9 @@ public abstract class Projectile extends ActiveActorDestructible {
 		this.destroy();
 	}
 
-	// Getter for X position
 	public double getXPosition() {
 		return xPosition;
 	}
-
-	// Setter for X position
-	public void setXPosition(double xPosition) {
-		this.xPosition = xPosition;
-	}
-
-	// Getter for Y position
-	public double getYPosition() {
-		return yPosition;
-	}
-
-	// Setter for Y position
-	public void setYPosition(double yPosition) {
-		this.yPosition = yPosition;
-	}
-
 
 	@Override
 	public abstract void updatePosition();

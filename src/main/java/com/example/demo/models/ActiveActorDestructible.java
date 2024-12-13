@@ -1,8 +1,4 @@
 package com.example.demo.models;
-import com.example.demo.models.ActiveActor;
-import com.example.demo.models.Destructible;
-import javafx.geometry.BoundingBox;
-import javafx.geometry.Bounds;
 
 public abstract class ActiveActorDestructible extends ActiveActor implements Destructible {
 
@@ -12,9 +8,7 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
 
 	public ActiveActorDestructible(String imageName, int imageHeight, double initialXPos, double initialYPos) {
 		super(imageName, imageHeight, initialXPos, initialYPos);
-		this.shrinkFactorWidth = shrinkFactorWidth;
-		this.shrinkFactorHeight = shrinkFactorHeight;
-		isDestroyed = false;
+        isDestroyed = false;
 	}
 
 	public double getShrinkFactorWidth() {
@@ -33,19 +27,6 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
 		this.shrinkFactorHeight = shrinkFactorHeight;
 	}
 
-	public Bounds getAdjustedBounds(){
-		Bounds originalBounds = this.getBoundsInParent();
-
-		return new BoundingBox(
-				originalBounds.getMinX() + (originalBounds.getWidth() * (1 - shrinkFactorWidth) /2),
-				originalBounds.getMinY() + (originalBounds.getHeight() * (1 - shrinkFactorHeight) / 2),
-				originalBounds.getWidth() * shrinkFactorWidth,
-				originalBounds.getHeight() * shrinkFactorHeight
-
-		);
-
-	}
-
 	@Override
 	public abstract void updatePosition();
 
@@ -56,11 +37,11 @@ public abstract class ActiveActorDestructible extends ActiveActor implements Des
 
 	@Override
 	public void destroy() {
-		setDestroyed(true);
+		setDestroyed();
 	}
 
-	protected void setDestroyed(boolean isDestroyed) {
-		this.isDestroyed = isDestroyed;
+	protected void setDestroyed() {
+		this.isDestroyed = true;
 	}
 
 	public boolean isDestroyed() {

@@ -6,8 +6,8 @@ public class UserProjectileUlt extends Projectile {
     private static final int IMAGE_HEIGHT = 45;
     private static final int HORIZONTAL_VELOCITY = 15;
 //    private static final int VERTICAL_VELOCITY = 8;
-    private double velocityX;
-    private double velocityY;
+    private final double velocityX;
+    private final double velocityY;
 
     // Constructor that takes angleOffset to adjust the trajectory
     public UserProjectileUlt(double initialXPos, double initialYPos, double angleOffset) {
