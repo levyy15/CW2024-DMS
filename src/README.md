@@ -192,6 +192,7 @@
 
 ## Modified Java Classes
 1. **LevelParent**: </br>
+- **Location** : `src/main/java/com/example/demo/levels/LevelParent.java` </br> </br>
    &#8594; **Timeline bug**: </br>
    &nbsp; - Fixed the bug to advance to teh next level </br> </br>
     - **Updated method**:
@@ -227,7 +228,7 @@
    &#8594; **Fire Ultimate** : </br>
    &nbsp; - Press **'M'** to shoot three projectiles in a wide spread, accompanied by a firing sound effect.  </br></br>
     - **New methods**:
-        - `fireUlt()`: Fires three projectiles in a spread pattern with accompanying sound effects.
+        - `fireUlt()`: Fires three projectiles in a spread pattern with accompanying sound effects. </br></br>
 
    &#8594; **Move UP/DOWN** : </br>
    &nbsp; - Made **'W'** and **'S'** also move up and down. </br> </br>
@@ -239,12 +240,11 @@
    &nbsp; - Tracks destroyed enemies  and progress toward advancing levels.</br> </br>
    - **New variables**:
        - `killCount (int)`: Counts the number of enemies destroyed.
-       - `killsToAdvance (int)`: Determines the threshold for advancing to the next level.
-       - `initializeKillCounter`: 
-       -  `updateKillCount`: Updates the counter for ech enemies destroyed
+       - `killsToAdvance (int)`: Determines the threshold for advancing to the next level. 
+       -  `updateKillCount`: Updates the counter for each enemies destroyed. </br></br>
 
    - **New methods**:
-       - `initializeKillCounter()`: Updates the kill counter when an enemy is destroyed.
+       - `initializeKillCounter()`: Displays the kill counter. </br></br>
 
    &#8594; **Boss health display**: </br>
    &nbsp; - Shows a bar indicating the Boss's remaining health. </br> </br>
@@ -276,17 +276,96 @@
 
 ---
 2. **Main**: </br>
-   &#8594; **Background Music**: Added looping background music the entire game.</br>
-   &#8594; **Main Menu FXML**: Load Main Menu using FXML to `START GAME` or `QUIT`. </br> </br>
----
-3. **Controller**: Updated to handle health persistence and level transition. 
----
-4. **UserPlane**: 
-5. 
+- **Location** : `src/main/java/com/example/demo/main/Main.java` </br> </br>
 
+   &#8594; **Background music**: </br>
+   &nbsp; - Added background music functionality to improve user engagement. </br> </br>
+    - **New methods**:
+        - `backgroundMusic.loop()`: Initializes and continuously loops the background music using `Sound`. </br> </br>
+    
+    - **New variables**:
+        - `backgroundMusic()`: Manages the background music file and its playback. </br> </br>
+
+   &#8594; **Main menu fxml**: </br>
+   &nbsp; - Integrated a GUI for the main menu using FXML. </br> </br>
+   - **New methods**:
+        - `FXMLLoader()`: Loads the FXML file for the main menu interface.
+   - **New variables**:
+        - `mainMenuScene`:  GUI structure of the main menu and is set on the primary stage.</br> </br>
+---
+3. **UserPlane**: </br>
+- **Location** : `src/main/java/com/example/demo/models/UserPlane.java`</br>
+
+   &nbsp; - Updated to support health persistence and level transition, maintaining game continuity. </br> </br>
+   - **New methods**:
+     - `persistentHealth()`: Saves the current health state of the `UserPlane`, recalls health value when the new level begins. </br> 
+---
+4. **Levels**: </br>
+- **Location** : `src/main/java/com/example/demo/levels` </br> </br>
+
+- **Level One**: </br>
+  &#8594; Modified the background image.</br>
+  &#8594; Refactoring Package Structure </br>
+   - **Change**: moved `LevelOne` to levels package to improve code organization and maintainability.</br></br>
+
+- **Level Two**: </br>
+  &#8594; Modified the background image, and no longer has Boss.</br>
+  &#8594; Refactoring Package Structure </br>
+    - **Change**: moved `LevelTwo` to levels package to improve code organization and maintainability.
+---
+5. **Boss**: </br>
+- **Location** : `src/main/java/com/example/demo/models/Boss.java` </br> </br>
+  &#8594; Refactoring Package Structure </br>
+    - **Change**: moved `Boss` to models package to improve code organization and maintainability.</br></br>
+
+  &#8594; **Shield**: </br>
+  &nbsp; - Fixed the shield image to ensure it appears. </br> </br>
+    - **New methods**:
+        - `getFramesWithShieldActivated()`: Retrieves the animation frames.
+        - `isShielded()`: Check if the shield is currently active.
+        - `setShielded(boolean)`: A setter method to enable or disable the shield's activation state.
+        - `deactivateShield()`: Reset associated states, ensuring the shield effect is properly deactivated when no longer needed.</br></br>
+---
+6. **Models**
+- **Location** : `src/main/java/com/example/demo/models` </br> </br>
+
+- **Enemy Plane**: </br>
+  &#8594; Modified the enemy plane image.</br>
+  &#8594; Refactoring Package Structure </br>
+    - **Change**: moved `EnemyPlane` to models package to improve code organization and maintainability.</br></br>
+
+- **User Plane**: </br>
+  &#8594; Modified the user plane image.</br>
+  &#8594; Refactoring Package Structure </br>
+    - **Change**: moved `UserPlane` to models package to improve code organization and maintainability.
+---
 
 ## Unexpected Problems
-1. **Time**: Background image not updating properly during level change.
-   - **Solution**: Refactored `Controller` to include a level initialization method.
-2. **Random Crash on Enemy Spawn**: Occurred due to null pointers in enemy array.
-   - **Solution**: Added null checks before spawning enemies.  
+
+### 1. Shield Implementation
+- **Problem**:  
+  The shield feature took significantly more time than expected to implement. Initially, the shield image failed to appear, and the root cause of the issue was unclear. This was particularly frustrating and consumed a lot of debugging time.
+- **Solution**:
+    - Identified and fixed a missing reference in the rendering logic.
+    - Introduced new methods to handle shield activation and deactivation:
+        - `isShielded()`
+        - `getFramesWithShieldActivated()`
+        - `setShielded(boolean)`
+        - `deactivateShield()`
+    - These changes ensured that the shield worked seamlessly in gameplay.
+---
+### 2. Insufficient Time for Testing
+- **Problem**:  
+  Tight deadlines left little room for thorough testing. This led to edge cases being missed and some bugs only being discovered during later stages of gameplay.
+- **Solution**:
+    - Prioritized core gameplay features for testing.
+    - Created a backlog of minor bugs for future resolution.
+---
+### 3. Player Health Persistence Across Levels
+- **Problem**:  
+  Maintaining player health data between levels was more complex than expected. Early attempts led to health data resetting during transitions.
+- **Solution**:
+    - Implemented a new method, `persistentHealth()`, to store and retrieve health data during level transitions.
+    - This ensured that the player's health carried over seamlessly between levels.
+
+---
