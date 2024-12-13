@@ -2,6 +2,7 @@ package com.example.demo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.example.demo.projectiles.EnemyProjectile;
 import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

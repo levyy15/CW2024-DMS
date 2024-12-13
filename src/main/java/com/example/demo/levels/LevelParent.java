@@ -1,10 +1,16 @@
-package com.example.demo;
+package com.example.demo.levels;
 import com.example.demo.controller.MainMenuController;
 
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.example.demo.models.ActiveActorDestructible;
+import com.example.demo.models.Boss;
+import com.example.demo.models.FighterPlane;
+import com.example.demo.models.UserPlane;
+import com.example.demo.projectiles.UserProjectileUlt;
+import com.example.demo.ui.LevelView;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -25,7 +31,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.geometry.Pos;
 
-import com.example.demo.controller.Sound;
+import com.example.demo.Sound;
 
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.shape.Rectangle;
@@ -109,7 +115,7 @@ public abstract class LevelParent extends Observable {
 		levelView.showHeartDisplay(user.getHealth());
 		initializeBossHealthDisplay();
 		initializePausedLabelDisplay();
-		initializeSettingsButton();
+		initializeOptionsButton();
 		initializeKillCounter();
 		return scene;
 	}
@@ -220,12 +226,12 @@ public abstract class LevelParent extends Observable {
 	// Method to resume the game
 	private void resumeGame() {
 		isPaused = false;
-		timeline.play();  // Restart the game loop
+		timeline.play();
 		pausedLabel.setVisible(false);
 		dimOverlay.setVisible(false);
 	}
 
-	private void initializeSettingsButton() {
+	private void initializeOptionsButton() {
         Button settingsButton = new Button("Options");
 		Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 22);
 
@@ -337,7 +343,7 @@ public abstract class LevelParent extends Observable {
 	}
 	private void handleRestartGame() {
 		setChanged();
-		notifyObservers("com.example.demo.LevelOne");
+		notifyObservers("com.example.demo.levels.LevelOne");
 	}
 
 

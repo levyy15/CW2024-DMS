@@ -1,5 +1,8 @@
 package com.example.demo;
 
+import com.example.demo.models.ActiveActorDestructible;
+import com.example.demo.models.UserPlane;
+import com.example.demo.projectiles.UserProjectile;
 import javafx.application.Platform;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,9 @@
-package com.example.demo;
+package com.example.demo.levels;
+
+import com.example.demo.models.Boss;
+import com.example.demo.ui.LevelView;
+import com.example.demo.ui.LevelViewLevelThree;
+import com.example.demo.ui.ShieldImage;
 
 public class LevelThree extends LevelParent {
 

@@ -1,11 +1,11 @@
-package com.example.demo;
+package com.example.demo.projectiles;
 
 public class UserProjectileUlt extends Projectile {
 
     private static final String IMAGE_NAME = "userfire.png";
     private static final int IMAGE_HEIGHT = 45;
     private static final int HORIZONTAL_VELOCITY = 15;
-    private static final int VERTICAL_VELOCITY = 8;
+//    private static final int VERTICAL_VELOCITY = 8;
     private double velocityX;
     private double velocityY;
 
