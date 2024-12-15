@@ -1,8 +1,8 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/levyy15/CW2024-DMS/refs/heads/master/src/main/resources/com/example/demo/images/Title.png"/>
-</p>
-</br>
-**SKY BATTLE ✈️**, an exciting 2-D JAVA action-packed shooting game where the goal is simple: defeat the boss to win the game! 🔫
+</p></br>
+
+**SKY BATTLE** ✈️, an exciting 2-D JAVA action-packed shooting game where the goal is simple: defeat the boss to win the game! 🔫
 ## INSTALLATION
 1. Install IntelliJ IDEA or Eclipse
 2. Clone the repository : https://github.com/levyy15/CW2024-DMS.git
@@ -23,7 +23,20 @@
 - JDK 17 or later.
 - IntelliJ IDEA (2022.1 or later) or Eclipse (2023-06 or later).
 - Maven pre-installed (if dependencies need manual updating).
+---
+## How To Play
+- **W** / &#8593; : Move up
+- **S** / &#8595; : Move down
 
+### Firing
+- **Spacebar (Tap)**: Fire a single shot
+- **Spacebar (Hold)**: Fire continuously
+- **M** : Fire Special attack, shoots 3 bullets.
+
+### Pause and Resume
+- **P**: Pause the game
+- **Esc / "OPTIONS"**: Open option box
+---
 ## IMPLEMENTED AND WORKING PROPERLY
 1. **Health Progression**:
    - Players can progress through levels, whilst health persists between levels using `presistentHealth`.

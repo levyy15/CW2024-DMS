@@ -233,6 +233,7 @@ public abstract class LevelParent extends Observable {
 		background.setOnKeyReleased(e -> {
             KeyCode kc = e.getCode();
             if (kc == KeyCode.UP || kc == KeyCode.DOWN) user.stop();
+			if (kc == KeyCode.W  || kc == KeyCode.S) user.stop();
         });
 		root.getChildren().add(background);
 	}
