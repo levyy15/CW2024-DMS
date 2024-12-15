@@ -313,13 +313,13 @@ public abstract class LevelParent extends Observable {
 	 * Displays the options menu, pausing the game in the process.
 	 */
 	private void options() {
-		if (optionsBox == null) {
+		if (getOptionsBox() == null) {
 			Font pixelFont = Font.loadFont(getClass().getResourceAsStream("/fonts/PixelifySans-Regular.ttf"), 24);
 
-			optionsBox = new VBox();
-			optionsBox.setLayoutX(screenWidth / 2 - 300);
-			optionsBox.setLayoutY(screenHeight / 2 - 200);
-			optionsBox.setStyle(" -fx-background-color: rgba(0, 0, 0, 0.7); -fx-padding: 70px; -fx-border-color: white; -fx-border-width: 2px; -fx-spacing: 10px;");
+			setOptionsBox(new VBox());
+			getOptionsBox().setLayoutX(screenWidth / 2 - 300);
+			getOptionsBox().setLayoutY(screenHeight / 2 - 200);
+			getOptionsBox().setStyle(" -fx-background-color: rgba(0, 0, 0, 0.7); -fx-padding: 70px; -fx-border-color: white; -fx-border-width: 2px; -fx-spacing: 10px;");
 
 			Button menuButton = new Button("Main Menu");
 			menuButton.setFont(pixelFont);
@@ -341,15 +341,15 @@ public abstract class LevelParent extends Observable {
 			continueButton.setStyle("-fx-padding: 10px 20px; -fx-min-width: 450px;");
 
 			continueButton.setOnAction(e -> {
-				optionsBox.setVisible(false);
+				getOptionsBox().setVisible(false);
 				startGame();
 			});
 
-			optionsBox.getChildren().addAll(menuButton, continueButton, quitButton);
-			root.getChildren().add(optionsBox);
+			getOptionsBox().getChildren().addAll(menuButton, continueButton, quitButton);
+			root.getChildren().add(getOptionsBox());
 		}
 
-		optionsBox.setVisible(true);
+		getOptionsBox().setVisible(true);
 		timeline.stop();
 	}
 
@@ -727,4 +727,11 @@ public abstract class LevelParent extends Observable {
 		currentNumberOfEnemies = enemyUnits.size();
 	}
 
+	public VBox getOptionsBox() {
+		return optionsBox;
+	}
+
+	public void setOptionsBox(VBox optionsBox) {
+		this.optionsBox = optionsBox;
+	}
 }

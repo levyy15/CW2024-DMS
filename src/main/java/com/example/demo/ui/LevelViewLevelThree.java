@@ -1,7 +1,5 @@
 package com.example.demo.ui;
 
-import com.example.demo.ui.LevelView;
-import com.example.demo.ui.ShieldImage;
 import javafx.scene.Group;
 
 public class LevelViewLevelThree extends LevelView {
@@ -22,12 +20,5 @@ public class LevelViewLevelThree extends LevelView {
         root.getChildren().addAll(shieldImage);
     }
 
-    public void showShield() {
-        shieldImage.showShield();
-    }
-
-    public void hideShield() {
-        shieldImage.hideShield();
-    }
 
 }
